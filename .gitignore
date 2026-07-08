@@ -1,0 +1,56 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React Native
+.DS_Store
+*.log
+*.tmp
+*.tmp.*
+*.pem
+*.lock
+*.sublime-workspace
+*.sublime-project
+*.iml
+*.jar
+*.keystore
+*.jks
+*.p12
+
+# Android
+android/app/build/
+android/.gradle/
+android/local.properties
+android/app/src/main/res/values/strings.xml
+android/app/src/main/res/values/colors.xml
+android/app/src/main/res/values/styles.xml
+android/app/src/debug/
+android/app/src/release/
+
+# iOS
+ios/Pods/
+ios/build/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcworkspace/xcshareddata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/
+ios/*.xcodeproj/xcshareddata/
+
+# Firebase
+firebase/google-services.json
+firebase/GoogleService-Info.plist
+
+# Environment
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
