@@ -1,13 +1,14 @@
+// src/services/ChatbotService.js
 import Dialogflow from 'react-native-dialogflow';
 import firestore from '@react-native-firebase/firestore';
 
 class ChatbotService {
   constructor() {
-    // 🔥 මෙතනට ඔබගේ Dialogflow Client Access Token එක paste කරන්න
-    this.clientAccessToken = 'YOUR_CLIENT_ACCESS_TOKEN'; // <-- මෙය වෙනස් කරන්න
+    // 🔥 ඔබගේ සැබෑ Client Access Token එක මෙතනට දාන්න
+    this.clientAccessToken = '8a9b7c6d5e4f3g2h1i0j9k8l7m6n5o4p3q2r1s0t'; // <-- උදාහරණයක් පමණයි!
     
-    // 🔥 මෙතනට ඔබගේ Dialogflow Agent ID එක paste කරන්න
-    this.agentId = 'YOUR_AGENT_ID'; // <-- මෙය වෙනස් කරන්න
+    // 🔥 ඔබගේ සැබෑ Agent ID එක මෙතනට දාන්න
+    this.agentId = 'mindmate-chatbot-es-xxxxx'; // <-- උදාහරණයක් පමණයි!
     
     Dialogflow.setConfiguration(
       this.clientAccessToken,
