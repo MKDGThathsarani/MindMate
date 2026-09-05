@@ -28,13 +28,22 @@ class NotificationService {
   }
 
   scheduleDailyReminder() {
+    const now = new Date();
+    const reminderTime = new Date(now);
+    // Set reminder for 9 AM daily
+    reminderTime.setHours(9, 0, 0, 0);
+    
+    // If 9 AM has already passed today, schedule for tomorrow
+    if (reminderTime <= now) {
+      reminderTime.setDate(reminderTime.getDate() + 1);
+    }
+
     PushNotification.localNotificationSchedule({
       channelId: 'mindmate-channel',
       title: '🧠 MindMate Check-in',
       message: 'Hey there! 🌟 How are you feeling today? Take a moment to check in with yourself.',
-      date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      date: reminderTime,
       repeatType: 'day',
-      repeatTime: 1,
       allowWhileIdle: true,
     });
   }
