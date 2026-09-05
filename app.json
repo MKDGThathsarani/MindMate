@@ -1,4 +1,19 @@
 {
-  "name": "MindMate",
-  "slug": "mindmate"
+  "expo": {
+    "name": "MindMate",
+    "slug": "mindmate",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "scheme": "mindmate"
+  }
 }
