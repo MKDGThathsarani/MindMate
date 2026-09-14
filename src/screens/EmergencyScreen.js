@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -37,7 +38,7 @@ const EmergencyScreen = () => {
   const handleCall = (number) => {
     const phoneNumber = number.replace(/\D/g, '');
     Linking.openURL(`tel:${phoneNumber}`).catch(() => {
-      alert('Unable to make call');
+      Alert.alert('Unable to make call', 'Please dial the number manually or use another support option.');
     });
   };
 
