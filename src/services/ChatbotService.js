@@ -4,21 +4,27 @@ import firestore from '@react-native-firebase/firestore';
 
 class ChatbotService {
   constructor() {
-    // 🔥 ඔබගේ සැබෑ Client Access Token එක මෙතනට දාන්න
-    this.clientAccessToken = '8a9b7c6d5e4f3g2h1i0j9k8l7m6n5o4p3q2r1s0t'; // <-- උදාහරණයක් පමණයි!
-    
-    // 🔥 ඔබගේ සැබෑ Agent ID එක මෙතනට දාන්න
-    this.agentId = 'mindmate-chatbot-es-xxxxx'; // <-- උදාහරණයක් පමණයි!
-    
-    Dialogflow.setConfiguration(
-      this.clientAccessToken,
-      this.agentId,
-      Dialogflow.LANG_ENGLISH
-    );
+    this.clientAccessToken = '';
+    this.agentId = '';
+    this.isConfigured = Boolean(this.clientAccessToken && this.agentId);
+
+    if (this.isConfigured) {
+      Dialogflow.setConfiguration(
+        this.clientAccessToken,
+        this.agentId,
+        Dialogflow.LANG_ENGLISH
+      );
+    }
   }
 
   async sendMessage(userId, text) {
-    return new Promise((resolve, reject) => {
+    if (!this.isConfigured) {
+      const fallbackReply = this.getLocalReply(text);
+      await this.saveChatSession(userId, text, fallbackReply, null);
+      return fallbackReply;
+    }
+
+    return new Promise((resolve, _reject) => {
       Dialogflow.requestQuery(
         text,
         (result) => {
@@ -35,6 +41,20 @@ class ChatbotService {
         }
       );
     });
+  }
+
+  getLocalReply(text) {
+    const normalizedText = text.toLowerCase();
+
+    if (normalizedText.includes('emergency') || normalizedText.includes('suicide') || normalizedText.includes('hurt myself')) {
+      return 'I am glad you reached out. Please open Emergency Support in MindMate or contact a trusted person and local emergency services now.';
+    }
+
+    if (normalizedText.includes('anxious') || normalizedText.includes('anxiety') || normalizedText.includes('stress')) {
+      return 'That sounds difficult. Try taking five slow breaths, then name one thing you can control in the next ten minutes.';
+    }
+
+    return "I am here to listen. Dialogflow is not configured yet, but you can still use your mood check-in and wellness resources. 💚";
   }
 
   async saveChatSession(userId, userMessage, botReply, result) {

@@ -5,12 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  TextInput,
+  Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 const MoodTrackerScreen = () => {
   const [selectedMood, setSelectedMood] = useState(null);
+  const [note, setNote] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const moods = [
     { name: 'happy', emoji: '😊', color: '#FFD700' },
@@ -23,18 +27,25 @@ const MoodTrackerScreen = () => {
 
   const saveMood = async (mood) => {
     const uid = auth().currentUser?.uid;
-    if (!uid) return;
+    if (!uid || saving) return;
 
+    setSaving(true);
     try {
-      await firestore().collection('moods').add({
+      const date = new Date().toISOString().split('T')[0];
+      await firestore().collection('moods').doc(`${uid}_${date}`).set({
         uid,
         mood: mood.name,
-        date: new Date().toISOString().split('T')[0],
+        note: note.trim(),
+        date,
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
       setSelectedMood(mood.name);
+      Alert.alert('Check-in saved', 'Thanks for checking in with yourself today.');
     } catch (error) {
       console.error('Error saving mood:', error);
+      Alert.alert('Could not save check-in', 'Please check your connection and try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -60,6 +71,18 @@ const MoodTrackerScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
+
+      <Text style={styles.noteLabel}>Want to add a note? (optional)</Text>
+      <TextInput
+        style={styles.noteInput}
+        placeholder="What is on your mind today?"
+        placeholderTextColor="#8A8A8A"
+        multiline
+        value={note}
+        onChangeText={setNote}
+        maxLength={500}
+      />
+      <Text style={styles.helperText}>{saving ? 'Saving your check-in...' : 'Tap a mood above to save your check-in.'}</Text>
     </ScrollView>
   );
 };
@@ -103,6 +126,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#FFF',
+  },
+  noteLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  noteInput: {
+    minHeight: 100,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 12,
+    padding: 12,
+    textAlignVertical: 'top',
+    color: '#333',
+    backgroundColor: '#FAFAFA',
+  },
+  helperText: {
+    color: '#777',
+    fontSize: 12,
+    marginTop: 8,
+    marginBottom: 24,
   },
 });
 

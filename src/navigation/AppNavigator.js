@@ -11,6 +11,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import PeerSupportScreen from '../screens/PeerSupportScreen';
 import CounselorBookingScreen from '../screens/CounselorBookingScreen';
 import EmergencyScreen from '../screens/EmergencyScreen';
+import AuthScreen from '../screens/AuthScreen';
+import auth from '@react-native-firebase/auth';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -44,12 +46,24 @@ const MainTabs = () => {
 };
 
 const AppNavigator = () => {
+  const [user, setUser] = React.useState(() => auth().currentUser);
+
+  React.useEffect(() => {
+    return auth().onAuthStateChanged(setUser);
+  }, []);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Main" component={MainTabs} />
-      <Stack.Screen name="PeerSupport" component={PeerSupportScreen} />
-      <Stack.Screen name="CounselorBooking" component={CounselorBookingScreen} />
-      <Stack.Screen name="Emergency" component={EmergencyScreen} />
+      {user ? (
+        <>
+          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen name="PeerSupport" component={PeerSupportScreen} />
+          <Stack.Screen name="CounselorBooking" component={CounselorBookingScreen} />
+          <Stack.Screen name="Emergency" component={EmergencyScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="Auth" component={AuthScreen} />
+      )}
     </Stack.Navigator>
   );
 };
